@@ -7,3 +7,5 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: database
+    volumes:
+      - ./resources:/docker-entrypoint-initdb.d/

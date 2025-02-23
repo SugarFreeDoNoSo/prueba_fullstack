@@ -1,0 +1,9 @@
+CREATE ROLE ash WITH LOGIN;
+
+DO $$
+BEGIN
+   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'ash') THEN
+      CREATE ROLE ash LOGIN;
+   END IF;
+END
+$$;
