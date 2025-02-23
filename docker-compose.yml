@@ -9,3 +9,19 @@ services:
       POSTGRES_DB: database
     volumes:
       - ./resources:/docker-entrypoint-initdb.d/
+    networks:
+      - network_0
+  api: 
+    image: api_tcg
+    build: 
+      context: api
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgres://user:password@postgres:5432/database
+    ports:
+      - "3000:3000"
+    networks:
+      - network_0
+
+networks:
+  network_0: {}
