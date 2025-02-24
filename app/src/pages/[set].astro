@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SetDetails from '../components/Set-Details.astro';
+
+// Obtener el parámetro dinámico de la URL
+const { set } = Astro.params;
+
+// Si no hay set, redirigir a la página principal
+if (!set) {
+  return Astro.redirect('/');
+}
+---
+
+<Layout title={`Detalles del Set ${set}`}>
+    <SetDetails set_id={set} server:defer />
+
+</Layout> 

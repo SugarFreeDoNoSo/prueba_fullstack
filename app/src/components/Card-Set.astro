@@ -1,0 +1,64 @@
+---
+// SetTCG.astro
+
+import type { ISet } from "./Container-Sets.astro";
+
+export interface Props {
+  set: ISet;
+}
+
+const { set } = Astro.props;
+
+const detailId = `detail-${set.id}`;
+const toggleButtonId = `toggle-${set.id}`;
+
+
+---
+<div id={`card-set-${set.id}`} class="bg-white border-4 border-black rounded-none shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,0.8)] transition-all duration-300 ease-in-out overflow-hidden relative">
+  <div class="p-6">
+    <div class="flex items-center justify-between mb-4">
+      <img src={set.symbolUrl} alt={`${set.name} symbol`} class="w-10 h-10 border-2 border-black p-1 bg-yellow-200" />
+    </div>
+    <div class="border-4 border-black mb-4 bg-blue-100">
+      <img src={set.logoUrl} alt={`${set.name} logo`} class="w-full h-28 object-contain p-2" />
+    </div>
+    <h2 class="text-2xl font-black text-black mb-3 bg-pink-200 p-2 border-2 border-black inline-block transform -rotate-1">{set.name}</h2>
+    <div class="space-y-3 bg-green-100 p-3 border-2 border-black">
+      <p class="text-black">
+        <span class="font-black bg-purple-200 px-1">Series:</span> {set.series}
+      </p>
+      <p class="text-black">
+        <span class="font-black bg-purple-200 px-1">Cards:</span> {set.printedTotal} / {set.total}
+      </p>
+      <p class="text-black">
+        <span class="font-black bg-purple-200 px-1">Release Date:</span> {new Date(set.releaseDate).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })}
+      </p>
+    </div>
+    <a href={`/${set.id}`} class="mt-6 block text-center bg-yellow-400 hover:bg-yellow-300 text-black font-black py-3 px-4 border-4 border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:translate-x-1 transition-all duration-150">
+      Ver cartas
+    </a>
+  </div>
+</div>
+
+<script define:vars={{ toggleButtonId, detailId }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.getElementById(toggleButtonId);
+    const detailDiv = document.getElementById(detailId);
+    
+    if (toggleButton && detailDiv) {
+      toggleButton.addEventListener('click', () => {
+        if (detailDiv.style.display === 'none') {
+          detailDiv.style.display = 'block';
+          toggleButton.textContent = 'Ver menos';
+        } else {
+          detailDiv.style.display = 'none';
+          toggleButton.textContent = 'Ver más';
+        }
+      });
+    }
+  });
+</script>

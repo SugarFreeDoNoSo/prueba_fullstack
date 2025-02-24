@@ -1,0 +1,30 @@
+---
+import CardSet from "./Card-Set.astro";
+
+export interface ISet {
+    id: string;
+    name: string;
+    series: string;
+    printedTotal: number;
+    total: number;
+    ptcgoCode: string;
+    releaseDate: string;
+    symbolUrl: string;
+    logoUrl: string;
+};
+const url = process.env.BACKEND_URL || "http://localhost:3000";
+const response = await fetch(url +'/sets');
+const sets: ISet[] = await response.json();
+
+---
+
+<div class="min-h-screen bg-yellow-50 py-12 px-6">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-5xl font-black text-black mb-10 text-center border-black border-4 bg-white p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] inline-block mx-auto">Pokémon TCG Sets</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {sets.map(set => (
+        <CardSet set={set} />
+      ))}
+    </div>
+  </div>
+</div>

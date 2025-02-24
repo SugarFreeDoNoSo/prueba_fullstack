@@ -1,0 +1,202 @@
+---
+
+// Importaciones y lógica del servidor
+
+interface ICard {
+    id: string;
+    name: string;
+    supertype: string;
+    subtypes: string[];
+    types: string[];
+    setId: string;
+    number: string;
+    rarity: string;
+}
+
+interface IMarket {
+    id: number;
+    cardId: string;
+    url: string;
+    updatedAt: string;
+    market: string;
+}
+
+interface ICardDetail extends ICard {
+    Market?: IMarket[];
+    Image?: any[];
+}
+
+export interface ISet {
+    id: string;
+    name: string;
+    series: string;
+    printedTotal: number;
+    total: number;
+    ptcgoCode: string;
+    releaseDate: string;
+    symbolUrl: string;
+    logoUrl: string;
+};
+
+// Recibir props
+const { set_id } = Astro.props;
+
+// Fetch de datos en el servidor
+let cards: ICard[] = [];
+let error = null;
+let setInfo = null;
+
+try {
+    const url = process.env.BACKEND_URL || "http://localhost:3000";
+    const url_fetch = `${url}/sets/${set_id}/cards`;
+    const set_url_fetch = `${url}/sets`;
+    
+    // console.log('URLs de fetch:', { url_fetch, set_url_fetch, set_id });
+    
+    const [cardsResponse, setResponse] = await Promise.all([
+        fetch(url_fetch),
+        fetch(set_url_fetch)
+    ]);
+    
+    console.log('Estado de respuestas:', { 
+        cardsStatus: cardsResponse.status,
+        setStatus: setResponse.status 
+    });
+    
+    if (!cardsResponse.ok) {
+        throw new Error(`Error: ${cardsResponse.status}`);
+    }
+    
+    if (!setResponse.ok) {
+        throw new Error(`Error al obtener información del set: ${setResponse.status}`);
+    }
+    // console.log(url_fetch)
+    cards = await cardsResponse.json();
+    const allSets : ISet[] = await setResponse.json();
+    setInfo = allSets.find(set => set.id === set_id);
+} catch (err) {
+    error = err instanceof Error ? err.message : 'Error al cargar las cartas';
+    console.error('Error al cargar datos:', error);
+}
+---
+
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <a href="/" class="inline-flex items-center text-black bg-yellow-300 hover:bg-yellow-400 px-4 py-2 font-bold border-4 border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            Volver a Sets
+        </a>
+    </div>
+
+    <div class="bg-white border-4 border-black rounded-lg shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 mb-8">
+        {setInfo ? (
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-black mb-2">{setInfo.name}</h1>
+                    <p class="text-gray-800 text-xl">Serie: {setInfo.series}</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <span class="bg-cyan-300 text-black text-lg font-bold px-4 py-2 border-3 border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        {setInfo.releaseDate}
+                    </span>
+                </div>
+            </div>
+        ) : (
+            <h1 class="text-3xl md:text-4xl font-black mb-6">Cartas del Set {set_id}</h1>
+        )}
+
+        {error && (
+            <div class="text-center py-10 text-red-600 bg-red-200 font-bold text-xl border-4 border-black rounded-lg shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]">{error}</div>
+        )}
+
+        {!error && cards.length === 0 ? (
+            <div class="text-center py-10 bg-orange-200 text-xl font-bold rounded-lg border-4 border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]">
+                <p class="text-black">No se encontraron cartas para este set.</p>
+            </div>
+        ) : (
+            <div>
+                <div class="mb-4">
+                    <p class="text-black font-bold text-xl bg-green-300 inline-block px-4 py-2 border-3 border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">{cards.length} cartas encontradas</p>
+                </div>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                    {cards.map((card) => (
+                        <a href={`/card/${card.id}`}>
+                        <li 
+                            class="card-item relative border-4 border-black rounded-lg overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 hover:-translate-y-1 bg-white cursor-pointer"
+                            data-card-id={card.id}
+                        >
+                            <div class="bg-pink-300 p-4 border-b-4 border-black">
+                                <h3 class="font-black text-xl mb-2">{card.name}</h3>
+                                <div class="flex justify-between items-center">
+                                    <span class="bg-yellow-300 px-3 py-1 rounded-md text-base border-2 border-black font-bold inline-block">
+                                        #{card.number}
+                                    </span>
+                                    <span class="bg-purple-300 px-3 py-1 rounded-md border-2 border-black font-bold">
+                                        {card.rarity}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-4 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold">Supertipo:</span>
+                                    <span class="bg-blue-200 px-2 py-1 rounded-md border-2 border-black">{card.supertype}</span>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <span class="font-bold">Tipos:</span>
+                                    <div class="flex flex-wrap gap-2">
+                                        {card.types && card.types.length > 0 ? (
+                                            card.types.map(type => (
+                                                <span class="bg-green-200 px-2 py-1 rounded-md border-2 border-black text-sm">{type}</span>
+                                            ))
+                                        ) : (
+                                            <span class="text-gray-500">-</span>
+                                        )}
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <span class="font-bold">Subtipos:</span>
+                                    <div class="flex flex-wrap gap-2">
+                                        {card.subtypes && card.subtypes.length > 0 ? (
+                                            card.subtypes.map(subtype => (
+                                                <span class="bg-orange-200 px-2 py-1 rounded-md border-2 border-black text-sm">{subtype}</span>
+                                            ))
+                                        ) : (
+                                            <span class="text-gray-500">-</span>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute top-2 right-2 bg-cyan-300 text-xs px-2 py-1 rounded-full border-2 border-black font-bold">
+                                ID: {card.id.substring(0, 8)}
+                            </div>
+                        </li>
+                    </a>
+                    ))}
+                </ul>
+            </div>
+        )}
+    </div>
+</div>
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Agregar eventos a las tarjetas
+    document.querySelectorAll('.card-item').forEach((card) => {
+    card.addEventListener('click', () => {
+        const cardId = card.id;
+        if (cardId) {
+            document.dispatchEvent(new CustomEvent('showCardDetails', { detail: { cardId } }));
+            const cardModal = document.getElementById('cardModal');
+            if (cardModal) {
+                cardModal.classList.remove('hidden');
+            }
+        }
+    });
+});
+});
+</script>
