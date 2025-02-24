@@ -1,0 +1,163 @@
+---
+import SetCard from "./SetCard.astro";
+const sets = [
+  {
+    id: "sve",
+    name: "Scarlet & Violet Energies",
+    series: "Scarlet & Violet",
+    printedTotal: 16,
+    total: 16,
+    ptcgoCode: "SVE",
+    releaseDate: "2023-03-31",
+    updatedAt: "2024-09-19 19:45:00+00",
+    symbolUrl: "https://images.pokemontcg.io/sve/symbol.png",
+    logoUrl: "https://images.pokemontcg.io/sve/logo.png"
+  },
+  {
+    id: "sv3",
+    name: "Obsidian Flames",
+    series: "Scarlet & Violet",
+    printedTotal: 197,
+    total: 230,
+    ptcgoCode: "OBF",
+    releaseDate: "2023-08-11",
+    updatedAt: "2023-08-11 15:00:00+00",
+    symbolUrl: "https://images.pokemontcg.io/sv3/symbol.png",
+    logoUrl: "https://images.pokemontcg.io/sv3/logo.png"
+  },
+  {
+    id: "sv3pt5",
+    name: "151",
+    series: "Scarlet & Violet",
+    printedTotal: 165,
+    total: 207,
+    ptcgoCode: "MEW",
+    releaseDate: "2023-09-22",
+    updatedAt: "2023-09-22 15:00:00+00",
+    symbolUrl: "https://images.pokemontcg.io/sv3pt5/symbol.png",
+    logoUrl: "https://images.pokemontcg.io/sv3pt5/logo.png"
+  },
+  {
+    id: "sv4",
+    name: "Paradox Rift",
+    series: "Scarlet & Violet",
+    printedTotal: 182,
+    total: 266,
+    ptcgoCode: "PAR",
+    releaseDate: "2023-11-03",
+    updatedAt: "2023-11-03 15:00:00+00",
+    symbolUrl: "https://images.pokemontcg.io/sv4/symbol.png",
+    logoUrl: "https://images.pokemontcg.io/sv4/logo.png"
+  },
+  {
+    id: "sv4pt5",
+    name: "Paldean Fates",
+    series: "Scarlet & Violet",
+    printedTotal: 91,
+    total: 245,
+    ptcgoCode: "PAF",
+    releaseDate: "2024-01-26",
+    updatedAt: "2024-01-25 15:00:00+00",
+    symbolUrl: "https://images.pokemontcg.io/sv4pt5/symbol.png",
+    logoUrl: "https://images.pokemontcg.io/sv4pt5/logo.png"
+  },
+  {
+    id: "sv5",
+    name: "Temporal Forces",
+    series: "Scarlet & Violet",
+    printedTotal: 162,
+    total: 218,
+    ptcgoCode: "TEF",
+    releaseDate: "2024-03-22",
+    updatedAt: "2024-03-22 15:00:00+00",
+    symbolUrl: "https://images.pokemontcg.io/sv5/symbol.png",
+    logoUrl: "https://images.pokemontcg.io/sv5/logo.png"
+  },
+  {
+    id: "sv6",
+    name: "Twilight Masquerade",
+    series: "Scarlet & Violet",
+    printedTotal: 167,
+    total: 226,
+    ptcgoCode: "TWM",
+    releaseDate: "2024-05-24",
+    updatedAt: "2024-05-23 15:00:00+00",
+    symbolUrl: "https://images.pokemontcg.io/sv6/symbol.png",
+    logoUrl: "https://images.pokemontcg.io/sv6/logo.png"
+  },
+  {
+    id: "sv6pt5",
+    name: "Shrouded Fable",
+    series: "Scarlet & Violet",
+    printedTotal: 64,
+    total: 99,
+    ptcgoCode: "SFA",
+    releaseDate: "2024-08-02",
+    updatedAt: "2024-08-02 15:00:00+00",
+    symbolUrl: "https://images.pokemontcg.io/sv6pt5/symbol.png",
+    logoUrl: "https://images.pokemontcg.io/sv6pt5/logo.png"
+  },
+  {
+    id: "sv7",
+    name: "Stellar Crown",
+    series: "Scarlet & Violet",
+    printedTotal: 142,
+    total: 175,
+    ptcgoCode: "SCR",
+    releaseDate: "2024-09-13",
+    updatedAt: "2024-08-02 15:00:00+00",
+    symbolUrl: "https://images.pokemontcg.io/sv7/symbol.png",
+    logoUrl: "https://images.pokemontcg.io/sv7/logo.png"
+  },
+  {
+    id: "sv8",
+    name: "Surging Sparks",
+    series: "Scarlet & Violet",
+    printedTotal: 191,
+    total: 252,
+    ptcgoCode: "SSP",
+    releaseDate: "2024-11-08",
+    updatedAt: "2024-11-07 22:00:00+00",
+    symbolUrl: "https://images.pokemontcg.io/sv8/symbol.png",
+    logoUrl: "https://images.pokemontcg.io/sv8/logo.png"
+  }
+];
+
+export const cards = [
+  { id: "sve-1", name: "Basic Grass Energy", supertype: "Energy", subtypes: ["Basic"], types: [], setId: "sve", number: "1", rarity: "Common" },
+  { id: "sve-2", name: "Basic Fire Energy", supertype: "Energy", subtypes: ["Basic"], types: [], setId: "sve", number: "2", rarity: "Common" },
+  { id: "sve-3", name: "Basic Water Energy", supertype: "Energy", subtypes: ["Basic"], types: [], setId: "sve", number: "3", rarity: "Common" },
+  { id: "sve-4", name: "Basic Lightning Energy", supertype: "Energy", subtypes: ["Basic"], types: [], setId: "sve", number: "4", rarity: "Common" },
+  { id: "sve-5", name: "Basic Psychic Energy", supertype: "Energy", subtypes: ["Basic"], types: [], setId: "sve", number: "5", rarity: "Common" },
+  { id: "sve-6", name: "Basic Fighting Energy", supertype: "Energy", subtypes: ["Basic"], types: [], setId: "sve", number: "6", rarity: "Common" },
+  { id: "sve-7", name: "Basic Darkness Energy", supertype: "Energy", subtypes: ["Basic"], types: [], setId: "sve", number: "7", rarity: "Common" },
+  { id: "sve-8", name: "Basic Metal Energy", supertype: "Energy", subtypes: ["Basic"], types: [], setId: "sve", number: "8", rarity: "Common" },
+  { id: "sve-9", name: "Basic Grass Energy", supertype: "Energy", subtypes: ["Basic"], types: ["Grass"], setId: "sve", number: "9", rarity: "" },
+  { id: "sve-10", name: "Basic Fire Energy", supertype: "Energy", subtypes: ["Basic"], types: ["Fire"], setId: "sve", number: "10", rarity: "" },
+  { id: "sve-11", name: "Basic Water Energy", supertype: "Energy", subtypes: ["Basic"], types: ["Water"], setId: "sve", number: "11", rarity: "" },
+  { id: "sve-12", name: "Basic Lightning Energy", supertype: "Energy", subtypes: ["Basic"], types: ["Lightning"], setId: "sve", number: "12", rarity: "" },
+  { id: "sve-13", name: "Basic Psychic Energy", supertype: "Energy", subtypes: ["Basic"], types: ["Psychic"], setId: "sve", number: "13", rarity: "" },
+  { id: "sve-14", name: "Basic Fighting Energy", supertype: "Energy", subtypes: ["Basic"], types: ["Fighting"], setId: "sve", number: "14", rarity: "" },
+  { id: "sve-15", name: "Basic Darkness Energy", supertype: "Energy", subtypes: ["Basic"], types: ["Darkness"], setId: "sve", number: "15", rarity: "" },
+  { id: "sve-16", name: "Basic Metal Energy", supertype: "Energy", subtypes: ["Basic"], types: ["Metal"], setId: "sve", number: "16", rarity: "" }
+];
+
+const cardsBySet = cards.reduce((acc, card) => {
+  if (!acc[card.setId]) {
+    acc[card.setId] = [];
+  }
+  acc[card.setId].push(card);
+  return acc;
+}, {} as Record<string, typeof cards>);
+---
+
+<div class="min-h-screen bg-gray-100 py-8 px-4">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-8 text-center">Pokémon TCG Sets</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sets.map(set => (
+        <SetCard set={set} cards={cardsBySet[set.id] || []} />
+      ))}
+    </div>
+  </div>
+</div>

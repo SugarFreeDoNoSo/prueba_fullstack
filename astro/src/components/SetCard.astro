@@ -1,0 +1,75 @@
+---
+// CardsSet.astro
+
+import CardsDetail from './CardsDetail.astro';
+
+export interface Props {
+  set: {
+    id: string;
+    name: string;
+    series: string;
+    printedTotal: number;
+    total: number;
+    ptcgoCode: string;
+    releaseDate: string;
+    symbolUrl: string;
+    logoUrl: string;
+  };
+  cards: {
+    id: string;
+    name: string;
+    supertype: string;
+    subtypes: string[];
+    types: string[];
+    setId: string;
+    number: string;
+    rarity: string;
+  }[];
+  showDetails?: boolean;
+}
+const { set, cards, showDetails = false } = Astro.props;
+
+function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
+// URL para alternar el estado de visualización de detalles
+const toggleUrl = `/cards-set?setId=${set.id}&showDetails=${!showDetails}`;
+// Texto y estilos del botón según el estado actual
+const buttonText = showDetails ? 'Hide Cards' : 'View Cards';
+const buttonClasses = showDetails
+  ? 'bg-gray-500 hover:bg-gray-600'
+  : 'bg-blue-500 hover:bg-blue-600';
+---
+<div id={"card-set-" + set.id} class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-700 ease-in-out card-container">
+  <div class="p-6">
+    <div class="flex items-center justify-between mb-4">
+      <img src={set.symbolUrl} alt={`${set.name} symbol`} class="w-8 h-8" />
+      <span class="text-sm font-semibold text-gray-500">{set.ptcgoCode}</span>
+    </div>
+    <img src={set.logoUrl} alt={`${set.name} logo`} class="w-full h-24 object-contain mb-4" />
+    <h2 class="text-xl font-bold text-gray-900 mb-2">{set.name}</h2>
+    <div class="space-y-2">
+      <p class="text-gray-600"><span class="font-semibold">Series:</span> {set.series}</p>
+      <p class="text-gray-600"><span class="font-semibold">Cards:</span> {set.printedTotal} / {set.total}</p>
+      <p class="text-gray-600"><span class="font-semibold">Release Date:</span> {formatDate(set.releaseDate)}</p>
+    </div>
+    <button
+      hx-get={toggleUrl}
+      hx-target={"#card-set-" + set.id}
+      hx-swap="outerHTML"
+      class={"mt-4 w-full text-white py-2 px-4 rounded-md transition-colors duration-200 " + buttonClasses}
+    >
+      {buttonText}
+    </button>
+    {showDetails && (
+      <div class="cards-detail mt-4">
+        <CardsDetail setId={set.id} cards={cards} />
+      </div>
+    )}
+  </div>
+</div>
