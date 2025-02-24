@@ -1,15 +1,11 @@
 ---
 import "../styles/global.css";
 import Layout from '../layouts/Layout.astro';
-import Desk from '../components/Desk.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import ContainerSets from '../components/containerSets.astro';
 
 ---
-
-
+<script src="https://unpkg.com/htmx.org@2.0.4"></script>
 
 <Layout>
-  <Desk />
+  <ContainerSets />
 </Layout>

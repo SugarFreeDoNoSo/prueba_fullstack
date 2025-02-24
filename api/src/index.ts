@@ -48,7 +48,9 @@ const routes = {
                   printedTotal: { type: 'number' },
                   total: { type: 'number' },
                   releaseDate: { type: 'string' },
-                  updatedAt: { type: 'string' }
+                  updatedAt: { type: 'string' },
+                  symbolUrl: { type: 'string' },
+                  logoUrl: { type: 'string' }
                 }
               }
             }
@@ -100,23 +102,18 @@ const routes = {
                   id: { type: 'string' },
                   name: { type: 'string' },
                   supertype: { type: 'string' },
-                  subtypes: { 
+                  subtypes: {
                     type: 'array',
                     items: { type: 'string' }
-                  },
-                  level: { 
-                    type: 'string',
-                    nullable: true 
-                  },
-                  hp: { 
-                    type: 'string',
-                    nullable: true 
                   },
                   types: {
                     type: 'array',
                     items: { type: 'string' }
                   },
-                  setId: { type: 'string' }
+                  setId: { type: 'string' },
+                  number: { type: 'string' },
+                  rarity: { type: 'string' },
+
                 }
               }
             }
@@ -189,42 +186,24 @@ const routes = {
             schema: {
               type: 'object',
               properties: {
-                Card: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      id: { type: 'string' },
-                      name: { type: 'string' },
-                      supertype: { type: 'string' },
-                      subtypes: { 
-                        type: 'array',
-                        items: { type: 'string' }
-                      },
-                      level: { 
-                        type: 'string',
-                        nullable: true 
-                      },
-                      hp: { 
-                        type: 'string',
-                        nullable: true 
-                      },
-                      types: {
-                        type: 'array',
-                        items: { type: 'string' }
-                      },
-                      setId: { type: 'string' }
-                    }
-                  }
-                },
+                id: { type: 'string' },
+                name: { type: 'string' },
+                supertype: { type: 'string' },
+                subtypes: { type: 'array', items: { type: 'string' } },
+                types: { type: 'array' },
+                setId: { type: 'string' },
+                number: { type: 'string' },
+                rarity: { type: 'string' },
                 Market: {
                   type: 'array',
                   items: {
                     type: 'object',
                     properties: {
+                      id: { type: 'integer' },
                       cardId: { type: 'string' },
-                      price: { type: 'number' },
-                      updatedAt: { type: 'string' }
+                      url: { type: 'string' },
+                      updatedAt: { type: 'string' },
+                      market: { type: 'string' }
                     }
                   }
                 },
@@ -233,9 +212,10 @@ const routes = {
                   items: {
                     type: 'object',
                     properties: {
+                      id: { type: 'integer' },
                       cardId: { type: 'string' },
-                      small: { type: 'string' },
-                      large: { type: 'string' }
+                      url: { type: 'string' },
+                      type: { type: 'string' }
                     }
                   }
                 }
@@ -306,12 +286,12 @@ app.openapi(routes.getSetCards, async (c) => {
   try {
     const setId = c.req.param('id')
     if (!setId) return c.json({ error: 'ID de set requerido' }, 400)
-    
+
     const cards = await db.select().from(card).where(eq(card.setId, setId))
     if (cards.length === 0) {
       return c.json({ error: 'Set no encontrado o sin cartas' }, 404)
     }
-    
+
     return c.json(cards)
   } catch (error) {
     console.error('Error fetching cards:', error)
@@ -323,7 +303,7 @@ app.openapi(routes.getCardDetails, async (c) => {
   try {
     const cardId = c.req.param('id')
     if (!cardId) return c.json({ error: 'ID de carta requerido' }, 400)
-    
+
     const Card = await db.select().from(card).where(eq(card.id, cardId))
     if (Card.length === 0) {
       return c.json({ error: 'Carta no encontrada' }, 404)
@@ -331,8 +311,17 @@ app.openapi(routes.getCardDetails, async (c) => {
 
     const Market = await db.select().from(market).where(eq(market.cardId, cardId))
     const Image = await db.select().from(image).where(eq(image.cardId, cardId))
-    
-    return c.json({Card, Market, Image})
+
+    const CardDetails = {
+      ...Card[0],
+      Market,
+      Image
+    }
+
+
+    return c.json(
+      CardDetails
+    )
   } catch (error) {
     console.error('Error fetching card details:', error)
     return c.json({ error: 'Error interno del servidor' }, 500)

@@ -1,8 +1,0 @@
----
-import { cards } from '../components/Desk.astro';
-import CardViewerComponent from '../components/CardViewer.astro';
-
-const index = parseInt(Astro.url.searchParams.get('index') || '0');
-const currentIndex = Math.min(Math.max(0, index), cards.length - 1);
----
-<CardViewerComponent cards={cards} currentIndex={currentIndex} />
