@@ -33,12 +33,10 @@ interface CardDetail {
 
 // Obtener el cardId de los parámetros de la URL
 const { card } = Astro.params;
-console.log(card)
 const backendUrl = import.meta.env.BACKEND_URL || "http://localhost:3000";
 
 const response = await fetch(`${backendUrl}/cards/${card}`);
 
-console.log(response)
 const cardDetail: CardDetail = await response.json();
 // Definir un título para la página
 const pageTitle = cardDetail ? `${cardDetail.name} | Detalles de la Carta` : "Detalles de la Carta";

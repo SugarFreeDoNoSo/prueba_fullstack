@@ -8,18 +8,16 @@ COPY package.json .
 RUN bun install --frozen-lockfile
 
 # Copy rest of the files
-COPY . ./
+COPY . .
 
 # Build the binary
-RUN bun build src/index.ts --compile --outfile server
+RUN bun run build:bin
 
 # Final stage
 FROM debian:bookworm-slim
 
-WORKDIR /app
-
 # Copy only the compiled binary
-COPY --from=builder /app/server ./server
+COPY --from=builder /app/server .
 
 EXPOSE 3000
 

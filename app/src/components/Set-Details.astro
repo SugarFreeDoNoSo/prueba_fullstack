@@ -51,17 +51,12 @@ try {
     const url_fetch = `${url}/sets/${set_id}/cards`;
     const set_url_fetch = `${url}/sets`;
     
-    // console.log('URLs de fetch:', { url_fetch, set_url_fetch, set_id });
-    
+   
     const [cardsResponse, setResponse] = await Promise.all([
         fetch(url_fetch),
         fetch(set_url_fetch)
     ]);
     
-    console.log('Estado de respuestas:', { 
-        cardsStatus: cardsResponse.status,
-        setStatus: setResponse.status 
-    });
     
     if (!cardsResponse.ok) {
         throw new Error(`Error: ${cardsResponse.status}`);
@@ -70,7 +65,6 @@ try {
     if (!setResponse.ok) {
         throw new Error(`Error al obtener información del set: ${setResponse.status}`);
     }
-    // console.log(url_fetch)
     cards = await cardsResponse.json();
     const allSets : ISet[] = await setResponse.json();
     setInfo = allSets.find(set => set.id === set_id);

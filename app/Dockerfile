@@ -1,20 +1,12 @@
-FROM oven/bun:1 AS build
-
+FROM oven/bun:1 AS builder
 WORKDIR /app
-
-# Copiar archivos de dependencias
-COPY package.json ./
-# COPY bun.lockb ./
-
-# Instalar dependencias
-RUN bun install
-
-# Copiar el resto de los archivos
 COPY . .
+RUN bun install
+RUN bun run build
 
-RUN bunx astro build
-
+FROM node:lts-alpine AS runtime
+COPY --from=builder ./app .
+ENV HOST=0.0.0.0
+ENV PORT=4321
 EXPOSE 4321
-
-# Comando para ejecutar en producción
-CMD ["bunx", "astro", "preview", "--host", "0.0.0.0"]
+CMD node ./dist/server/entry.mjs
