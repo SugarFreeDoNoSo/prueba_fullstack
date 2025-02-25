@@ -12,7 +12,13 @@ RUN bun install
 # Copiar el resto de los archivos
 COPY . .
 
+RUN bunx astro build
+
+FROM debian:bookworm-slim
+
+COPY . . 
+
 EXPOSE 4321
 
 # Comando para ejecutar en producción
-CMD ["bun", "run", "dev", "--host", "0.0.0.0"]
+CMD ["bunx", "astro", "preview", "--host", "0.0.0.0"]
