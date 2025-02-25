@@ -9,7 +9,7 @@ import { db, set, card, market, image } from '@db';
 const routes = {
   welcome: createRoute({
     method: 'get',
-    path: '/',
+    path: '/api',
     tags: ['General'],
     description: 'Welcome endpoint',
     responses: {
