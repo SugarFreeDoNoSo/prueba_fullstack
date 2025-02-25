@@ -1,3 +1,7 @@
+# Links
+- App: http://ec2-54-207-47-130.sa-east-1.compute.amazonaws.com:4321/
+- Docs: http://ec2-54-207-47-130.sa-east-1.compute.amazonaws.com:3000/swagger
+
 # Proyecto Pokémon TCG
 
 ## Configuración con Docker
