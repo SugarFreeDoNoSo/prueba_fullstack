@@ -14,10 +14,6 @@ COPY . .
 
 RUN bunx astro build
 
-FROM debian:bookworm-slim
-
-COPY . . 
-
 EXPOSE 4321
 
 # Comando para ejecutar en producción
