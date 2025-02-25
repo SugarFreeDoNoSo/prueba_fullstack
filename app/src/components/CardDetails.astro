@@ -19,8 +19,8 @@ interface CardDetail {
     Market: IMarket[];
 }
 
+const backendUrl = process.env.BACKEND_URL || "http://localhost:3000";
 
-const backendUrl = import.meta.env.BACKEND_URL || "http://localhost:3000";
 
 // Se espera que el componente reciba el cardId como prop
 const { cardId, show } = Astro.props;

@@ -4,8 +4,9 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
+    "build": "bunx --bun astro build",
+    "build:bin": "bun build ./dist/server/entry.mjs --compile --outfile=server",
+    "start": "bun run ./dist/server/entry.mjs",
     "astro": "astro"
   },
   "dependencies": {
@@ -19,9 +20,10 @@
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "astro": "^5.3.1",
+    "astro-bun-adapter": "^1.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.475.0",
+    "lucide-react": "0.476.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.0.2",

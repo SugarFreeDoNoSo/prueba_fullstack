@@ -130,3 +130,9 @@ dist
 .pnp.*
 .vercel
 run/api
+app/.astro/content-assets.mjs
+app/.astro/content-modules.mjs
+app/.astro/content.d.ts
+app/.astro/data-store.json
+app/.astro/settings.json
+app/.astro/types.d.ts

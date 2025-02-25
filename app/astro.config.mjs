@@ -1,7 +1,9 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from "@tailwindcss/vite";
-import node from '@astrojs/node';
+// import node from '@astrojs/node';
+import bun from 'astro-bun-adapter';
+
 
 export default defineConfig({
   server: {
@@ -12,7 +14,5 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   output: 'server',
-  adapter: node({
-    mode: 'standalone'
-  })
+  adapter: bun(),
 })
