@@ -11,9 +11,10 @@ services:
       - ./resources:/docker-entrypoint-initdb.d/
     networks:
       - network_0
-  api: 
+
+  api:
     image: api_tcg
-    build: 
+    build:
       context: api
       dockerfile: Dockerfile
     environment:
@@ -22,15 +23,23 @@ services:
       - "3000:3000"
     networks:
       - network_0
+
   app:
     image: app_tcg
-    build: 
+    build:
       context: app
       dockerfile: Dockerfile
     environment:
       - BACKEND_URL=http://api:3000
+    networks:
+      - network_0
+
+  nginx:
+    image: nginx:alpine
     ports:
-      - "80:4321"
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
     networks:
       - network_0
 
