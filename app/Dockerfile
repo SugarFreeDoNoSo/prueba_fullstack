@@ -1,27 +1,18 @@
-# Build stage
-FROM oven/bun:1 AS builder
+FROM oven/bun:1 AS build
 
 WORKDIR /app
 
-# Copy package files first for better caching
-COPY package.json .
-RUN bun install --frozen-lockfile
+# Copiar archivos de dependencias
+COPY package.json ./
+# COPY bun.lockb ./
 
-# Copy rest of the files
-COPY . ./
+# Instalar dependencias
+RUN bun install
 
-# Build the binary
-RUN bun build src/index.ts --compile --outfile server
+# Copiar el resto de los archivos
+COPY . .
 
-# Final stage
-FROM debian:bookworm-slim
+EXPOSE 4321
 
-WORKDIR /app
-
-# Copy only the compiled binary
-COPY --from=builder /app/server ./server
-
-EXPOSE 3000
-
-# Run the binary
-CMD sh -c "./server --database-url $DATABASE_URL"
+# Comando para ejecutar en producción
+CMD ["bun", "run", "dev", "--host", "0.0.0.0"]

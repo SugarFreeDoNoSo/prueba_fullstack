@@ -3,7 +3,9 @@
   "type": "module",
   "scripts": {
     "dev": "bun src/index.ts --watch --bun",
-    "build": "bun build --target=bun --outfile=dist/server.ts ./src/index.ts",
+    "build": "bun build --target=node --outfile=dist/server.ts ./src/index.ts",
+    "build:bun": "bun build --target=bun --outfile=dist/server.ts ./src/index.ts",
+    "build:bin":"bun build src/index.ts --compile --outfile dist/server",
     "start": "bun run dist/server.ts"
   },
   "dependencies": {

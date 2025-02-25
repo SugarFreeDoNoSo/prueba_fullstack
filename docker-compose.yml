@@ -22,6 +22,17 @@ services:
       - "3000:3000"
     networks:
       - network_0
+  app:
+    image: app_tcg
+    build: 
+      context: app
+      dockerfile: Dockerfile
+    environment:
+      - BACKEND_URL=http://api:3000
+    ports:
+      - "4321:4321"
+    networks:
+      - network_0
 
 networks:
   network_0: {}
