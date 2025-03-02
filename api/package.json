@@ -5,16 +5,18 @@
     "dev": "bun src/index.ts --watch --bun",
     "build": "bun build --target=node --outfile=dist/server.ts ./src/index.ts",
     "build:bun": "bun build --target=bun --outfile=dist/server.ts ./src/index.ts",
-    "build:bin":"bun build src/index.ts --compile --outfile server",
+    "build:bin": "bun build src/index.ts --compile --outfile server",
+    "export": "bun build --target=bun --splitting --outdir=../dist/api ./src/index.ts",
     "start": "bun run dist/server.ts"
   },
   "dependencies": {
     "@hono/node-server": "1.13.8",
     "@hono/swagger-ui": "^0.5.0",
     "@hono/zod-openapi": "^0.18.4",
-    "dotenv": "16.4.7",
-    "drizzle-kit": "0.30.4",
-    "drizzle-orm": "0.39.3",
+    "@neondatabase/serverless": "^0.10.4",
+    "dotenv": "^16.4.7",
+    "drizzle-kit": "^0.30.5",
+    "drizzle-orm": "^0.40.0",
     "hono": "4.7.2",
     "pg": "8.13.3"
   },
@@ -22,6 +24,6 @@
     "@biomejs/biome": "1.9.4",
     "@types/node": "22.13.5",
     "@types/pg": "8.11.11",
-    "tsx": "4.19.3"
+    "tsx": "^4.19.3"
   }
 }

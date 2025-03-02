@@ -1,11 +1,13 @@
 import 'dotenv/config';
-import { drizzle } from 'drizzle-orm/node-postgres';
-
+import { drizzle } from 'drizzle-orm/neon-http';
 import { pgTable, text, integer, date, timestamp, foreignKey, bigint } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
-export const db = drizzle(process.env.DATABASE_URL || "postgres://user:password@localhost:5432/database");
+
+const DATABASE_URL= process.env.DATABASE_URL || "ERROR"
+// console.log(DATABASE_URL)
+export const db = drizzle(DATABASE_URL);
 
 export const set = pgTable("set", {
 	id: text().primaryKey().notNull(),

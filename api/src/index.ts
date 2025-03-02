@@ -5,6 +5,43 @@ import { swaggerUI } from '@hono/swagger-ui'
 
 import { db, set, card, market, image } from '@db';
 
+const cache = new Map<string, { data: any, timestamp: number }>();
+// Middleware para implementar caché en las respuestas
+const cacheMiddleware = (timeToLive = 60000 * 60 * 24 * 30) => { // TTL predeterminado: 30 dias
+  return async (c: any, next: () => any) => {
+    const url = c.req.url;
+    const method = c.req.method;
+    const cacheKey = `${method}:${url}`;
+    
+    // Verificar si existe en caché y no ha expirado
+    const cachedItem = cache.get(cacheKey);
+    const now = Date.now();
+    
+    if (cachedItem && (now - cachedItem.timestamp) < timeToLive) {
+      console.log(`🔄 Sirviendo respuesta desde caché para: ${cacheKey}`);
+      return c.json(cachedItem.data);
+    }
+    
+    // Si no está en caché o expiró, interceptar la respuesta
+    const originalJson = c.json;
+    c.json = function(data: any, status?: number, headers?: Record<string, string>) {
+      // Guardar en caché solo para métodos GET
+      if (method === 'GET') {
+        cache.set(cacheKey, {
+          data: data,
+          timestamp: now
+        });
+        console.log(`💾 Guardando en caché: ${cacheKey}`);
+      }
+      
+      // Llamar al método json original
+      return originalJson.call(this, data, status, headers);
+    };
+    
+    return await next();
+  };
+}
+
 // Define route schemas
 const routes = {
   welcome: createRoute({
@@ -267,12 +304,12 @@ const routes = {
   }) as any
 }
 
-const app = new OpenAPIHono()
+// Funciones controladores
+const welcomeHandler = (c: any) => {
+  return c.text('Pokemon TCG API - Bienvenido!')
+}
 
-// Register routes
-app.openapi(routes.welcome, (c) => c.text('Pokemon TCG API - Bienvenido!'))
-
-app.openapi(routes.getAllSets, async (c) => {
+const getAllSetsHandler = async (c: any) => {
   try {
     const sets = await db.select().from(set)
     return c.json(sets)
@@ -280,9 +317,9 @@ app.openapi(routes.getAllSets, async (c) => {
     console.error('Error fetching sets:', error)
     return c.json({ error: 'Error interno del servidor' }, 500)
   }
-})
+}
 
-app.openapi(routes.getSetCards, async (c) => {
+const getSetCardsHandler = async (c: any) => {
   try {
     const setId = c.req.param('id')
     if (!setId) return c.json({ error: 'ID de set requerido' }, 400)
@@ -297,9 +334,9 @@ app.openapi(routes.getSetCards, async (c) => {
     console.error('Error fetching cards:', error)
     return c.json({ error: 'Error interno del servidor' }, 500)
   }
-})
+}
 
-app.openapi(routes.getCardDetails, async (c) => {
+const getCardDetailsHandler = async (c: any) => {
   try {
     const cardId = c.req.param('id')
     if (!cardId) return c.json({ error: 'ID de carta requerido' }, 400)
@@ -318,15 +355,36 @@ app.openapi(routes.getCardDetails, async (c) => {
       Image
     }
 
-
-    return c.json(
-      CardDetails
-    )
+    return c.json(CardDetails)
   } catch (error) {
     console.error('Error fetching card details:', error)
     return c.json({ error: 'Error interno del servidor' }, 500)
   }
-})
+}
+
+// Crear handlers combinados con caché
+const cachedGetAllSetsHandler = async (c: any) => {
+  const middleware = cacheMiddleware();
+  return middleware(c, () => getAllSetsHandler(c));
+}
+
+const cachedGetSetCardsHandler = async (c: any) => {
+  const middleware = cacheMiddleware();
+  return middleware(c, () => getSetCardsHandler(c));
+}
+
+const cachedGetCardDetailsHandler = async (c: any) => {
+  const middleware = cacheMiddleware();
+  return middleware(c, () => getCardDetailsHandler(c));
+}
+
+const app = new OpenAPIHono()
+
+// Registrar rutas con handlers que incluyen caché
+app.openapi(routes.welcome, welcomeHandler)
+app.openapi(routes.getAllSets, cachedGetAllSetsHandler)
+app.openapi(routes.getSetCards, cachedGetSetCardsHandler)
+app.openapi(routes.getCardDetails, cachedGetCardDetailsHandler)
 
 // Add Swagger UI
 app.doc('/docs', {

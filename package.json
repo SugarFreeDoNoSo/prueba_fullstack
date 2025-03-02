@@ -1,0 +1,11 @@
+{
+    "scripts": {
+        "init-bun": "npm install -g bun",
+        "build:api": "cd api && bun i && bun run export",
+        "build:app": "cd app && bun i && bun run export",
+        "start:api": "bun run dist/api/index.js",
+        "start:app": "bun run dist/app/entry.js",
+        "build": "bun build:api && bun build:app",
+        "start": "bun run start:api & bun run start:app"
+    }
+}

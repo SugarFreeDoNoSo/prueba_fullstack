@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "build": "bunx --bun astro build",
     "build:bin": "bun build ./dist/server/entry.mjs --compile --outfile=server",
+    "export": "bun i && bunx --bun astro build && bun build --target=bun --minify --splitting --outdir=../dist/app ./dist/server/entry.mjs && cp -r ./dist/client ../dist/app/client",
     "start": "bun run ./dist/server/entry.mjs",
     "astro": "astro"
   },
